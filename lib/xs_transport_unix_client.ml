@@ -17,6 +17,7 @@
 open Lwt
 
 let xenstored_socket = ref "/var/run/xenstored/socket"
+let debug_delay = ref None
 
 (* Individual connections *)
 type t = Lwt_unix.file_descr * Lwt_unix.sockaddr
@@ -26,7 +27,13 @@ let create () =
   lwt () = Lwt_unix.connect fd sockaddr in
   return (fd, sockaddr)
 let destroy (fd, _) = Lwt_unix.close fd
-let read (fd, _) = Lwt_unix.read fd
+let read (fd, _) x y z = 
+	lwt result = Lwt_unix.read fd x y z in
+    lwt () = match !debug_delay with 
+		| Some x -> Lwt_unix.sleep x
+		| None -> return ()
+    in
+    return result
 let write (fd, _) bufs ofs len =
 	lwt n = Lwt_unix.write fd bufs ofs len in
 	if n <> len then begin

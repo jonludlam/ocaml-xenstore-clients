@@ -29,3 +29,11 @@ Executable xsbench
   Custom:             true
   Install:            false
   BuildDepends:       lwt, lwt.unix, xenstore, xenstore.client, xenstore_client_unix
+
+Executable suspend_test
+  CompiledObject:     best
+  Path:               lib_test
+  MainIs:             suspend_test.ml
+  Custom:             true
+  Install:            false
+  BuildDepends:       lwt, lwt.unix, xenstore, xenstore.client, xenstore_client_unix
